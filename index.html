@@ -689,6 +689,22 @@ tbody td { padding: 12px 16px; color: var(--text-primary); vertical-align: middl
 .drill-criteria-key { color:var(--text-secondary); }
 .drill-criteria-val { font-weight:700; color:var(--text-primary); text-align:right; }
 .drill-note { font-size:0.76rem; color:var(--text-muted); background:var(--bg-elevated); border-radius:var(--radius-sm); padding:10px 13px; margin-top:14px; border-left:3px solid var(--terracotta); line-height:1.6; }
+
+/* ── LOB TAB SELECTOR ── */
+.lob-tab {
+  padding: 7px 16px; border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: var(--bg-elevated); color: var(--text-secondary);
+  font-size: 0.77rem; font-weight: 600; cursor: pointer;
+  transition: var(--transition); font-family: var(--font-body);
+  white-space: nowrap;
+}
+.lob-tab:hover { border-color: var(--terracotta); color: var(--terracotta); background: var(--terracotta-dim); }
+.lob-tab.active {
+  background: var(--terracotta-dim); border-color: var(--terracotta);
+  color: var(--terracotta); box-shadow: 0 2px 8px var(--terracotta-dim);
+}
+
 </style>
 </head>
 <body>
@@ -739,14 +755,6 @@ tbody td { padding: 12px 16px; color: var(--text-primary); vertical-align: middl
     <div class="hero-desc">Q2 2026 · Grameenphone Customer Experience · Real-time performance tracking for agents who truly care.</div>
   </div>
   <div class="hero-stats">
-    <div class="hero-stat-item">
-      <div class="hero-stat-val" id="heroCC">—</div>
-      <div class="hero-stat-label">CC Floor Avg</div>
-    </div>
-    <div class="hero-stat-item">
-      <div class="hero-stat-val" id="heroDig">—</div>
-      <div class="hero-stat-label">Digital Avg</div>
-    </div>
     <div class="hero-stat-item">
       <div class="hero-stat-val" id="heroQual">—</div>
       <div class="hero-stat-label">Qualified</div>
@@ -840,22 +848,7 @@ tbody td { padding: 12px 16px; color: var(--text-primary); vertical-align: middl
     <div class="section-line"></div>
   </div>
   <div class="kpi-grid">
-    <div class="kpi-card c-terra" onclick="drillKPI('cc')" style="cursor:pointer" title="Click to drill down">
-      <div class="kpi-accent-bar"></div>
-      <span class="kpi-icon">📞</span>
-      <div class="kpi-label">CC Floor Avg</div>
-      <div class="kpi-value" id="kCC">—</div>
-      <div class="kpi-sub">Call Center empathy</div>
-      <span class="kpi-badge badge-slate" id="kCCBadge"></span>
-    </div>
-    <div class="kpi-card c-slate" onclick="drillKPI('dig')" style="cursor:pointer" title="Click to drill down">
-      <div class="kpi-accent-bar"></div>
-      <span class="kpi-icon">💻</span>
-      <div class="kpi-label">Digital Floor Avg</div>
-      <div class="kpi-value" id="kDig">—</div>
-      <div class="kpi-sub">Digital channel empathy</div>
-      <span class="kpi-badge badge-amber" id="kDigBadge"></span>
-    </div>
+
     <div class="kpi-card c-sage" onclick="drillKPI('qualified')" style="cursor:pointer" title="Click to drill down">
       <div class="kpi-accent-bar"></div>
       <span class="kpi-icon">✅</span>
@@ -932,73 +925,6 @@ tbody td { padding: 12px 16px; color: var(--text-primary); vertical-align: middl
     </div>
   </div>
 
-  <!-- CHARTS -->
-  <div class="section-header">
-    <span class="section-icon">📈</span>
-    <h2>Performance Analytics</h2>
-    <div class="section-line"></div>
-  </div>
-  <div class="chart-grid-2">
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <h3>Avg Empathy Score by LOB</h3>
-        <div class="chart-type-toggle">
-          <button class="toggle-btn active" onclick="toggleChartType('lobEmpathy','bar',this)">Bar</button>
-          <button class="toggle-btn" onclick="toggleChartType('lobEmpathy','horizontalBar',this)">H-Bar</button>
-        </div>
-      </div>
-      <div class="chart-sub">Mean empathy score across Lines of Business</div>
-      <div class="chart-container"><canvas id="cLOBEmpathy"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <h3>Eligibility Breakdown by LOB</h3>
-        <div class="chart-type-toggle">
-          <button class="toggle-btn active" onclick="toggleChartType('eligibility','stacked',this)">Stacked</button>
-          <button class="toggle-btn" onclick="toggleChartType('eligibility','grouped',this)">Grouped</button>
-        </div>
-      </div>
-      <div class="chart-sub">Qualified vs Not Eligible per Line of Business</div>
-      <div class="chart-container"><canvas id="cEligibility"></canvas></div>
-    </div>
-  </div>
-
-  <div class="chart-grid-3">
-    <div class="chart-card">
-      <div class="chart-card-header"><h3>Score Distribution</h3></div>
-      <div class="chart-sub">How agents are distributed across weighted score bands</div>
-      <div class="chart-container"><canvas id="cScoreDist"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-card-header"><h3>CTG vs DHK</h3></div>
-      <div class="chart-sub">Site-level empathy comparison</div>
-      <div class="chart-container"><canvas id="cSite"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-card-header"><h3>Attendance Distribution</h3></div>
-      <div class="chart-sub">Agent attendance days this month</div>
-      <div class="chart-container"><canvas id="cAttendance"></canvas></div>
-    </div>
-  </div>
-
-  <div class="chart-grid-2">
-    <div class="chart-card">
-      <div class="chart-card-header"><h3>4 Empathy Sub-Metrics</h3></div>
-      <div class="chart-sub">Average scores across the four evaluation dimensions</div>
-      <div class="chart-container"><canvas id="cRadar"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <h3>CSAT% by LOB</h3>
-        <div class="chart-type-toggle">
-          <button class="toggle-btn active" onclick="toggleChartType('csat','line',this)">Line</button>
-          <button class="toggle-btn" onclick="toggleChartType('csat','bar',this)">Bar</button>
-        </div>
-      </div>
-      <div class="chart-sub">Average CSAT / Escalation Accuracy by LOB</div>
-      <div class="chart-container"><canvas id="cCSAT"></canvas></div>
-    </div>
-  </div>
 
   <!-- TOP PERFORMERS -->
   <div class="section-header">
@@ -1035,33 +961,24 @@ tbody td { padding: 12px 16px; color: var(--text-primary); vertical-align: middl
       <h3>🎯 Top 10 — Empathy Score</h3>
       <div id="lbEmpathy"></div>
     </div>
-    <div class="lb-card">
+    <div class="lb-card" onclick="drillLeaderLB('tl')" style="cursor:pointer" title="Click to expand">
       <h3>👥 Top Team Leaders</h3>
       <div id="lbTL"></div>
     </div>
-    <div class="lb-card">
+    <div class="lb-card" onclick="drillLeaderLB('qa')" style="cursor:pointer" title="Click to expand">
       <h3>🔍 Top QAs</h3>
       <div id="lbQA"></div>
     </div>
-    <div class="lb-card">
+    <div class="lb-card" onclick="drillLeaderLB('cctrainer')" style="cursor:pointer" title="Click to expand">
       <h3>🎓 Top CC Trainers</h3>
       <div id="lbCCTrainer"></div>
     </div>
-    <div class="lb-card">
+    <div class="lb-card" onclick="drillLeaderLB('digtrainer')" style="cursor:pointer" title="Click to expand">
       <h3>🎓 Top Digital Trainers</h3>
       <div id="lbDigTrainer"></div>
     </div>
   </div>
 
-  <!-- SLOTS -->
-  <div class="section-header">
-    <span class="section-icon">📋</span>
-    <h2>Slots Remaining by LOB</h2>
-    <div class="section-line"></div>
-  </div>
-  <div class="slots-grid" id="slotsGrid">
-    <div style="color:var(--text-muted);padding:20px;font-size:0.85rem">Loading slots…</div>
-  </div>
 
   <!-- AGENT TABLE -->
   <div class="section-header">
@@ -1071,7 +988,7 @@ tbody td { padding: 12px 16px; color: var(--text-primary); vertical-align: middl
   </div>
   <div class="table-card">
     <div class="table-header">
-      <h3>All Agents — Q2 2026 <span style="color:var(--text-muted);font-weight:400;font-size:0.78rem;font-family:var(--font-body)" id="tableCount"></span></h3>
+      <h3>Agent Performance Table <span style="color:var(--text-muted);font-weight:400;font-size:0.78rem;font-family:var(--font-body)" id="tableCount"></span></h3>
       <div class="table-controls">
         <span style="font-size:0.75rem;color:var(--text-muted)">Rows per page:</span>
         <select class="page-size-select" id="pageSize" onchange="changePage(1)">
@@ -1081,6 +998,24 @@ tbody td { padding: 12px 16px; color: var(--text-primary); vertical-align: middl
           <option value="100">100</option>
         </select>
       </div>
+    </div>
+    <!-- LOB Tab Selector + Winners Toggle -->
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border-muted)">
+      <div id="lobTabBar" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+        <span style="font-size:0.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;align-self:center;margin-right:4px">View LOB:</span>
+        <button class="lob-tab active" data-lob="all" onclick="setLOBTab(this,'all')">🌐 All</button>
+        <button class="lob-tab" data-lob="Mass" onclick="setLOBTab(this,'Mass')">📞 Mass</button>
+        <button class="lob-tab" data-lob="Premium" onclick="setLOBTab(this,'Premium')">💎 Premium</button>
+        <button class="lob-tab" data-lob="2nd Tier" onclick="setLOBTab(this,'2nd Tier')">🎯 2nd Tier</button>
+        <button class="lob-tab" data-lob="Retail" onclick="setLOBTab(this,'Retail')">🏪 Retail</button>
+        <button class="lob-tab" data-lob="158" onclick="setLOBTab(this,'158')">🆘 158</button>
+        <button class="lob-tab" data-lob="Skitto_121" onclick="setLOBTab(this,'Skitto_121')">📲 Skitto</button>
+        <button class="lob-tab" data-lob="Live Chat" onclick="setLOBTab(this,'Live Chat')">💬 Live Chat</button>
+        <button class="lob-tab" data-lob="Email" onclick="setLOBTab(this,'Email')">✉️ Email</button>
+      </div>
+      <button id="winnersToggleBtn" onclick="toggleWinnersFilter()" style="display:flex;align-items:center;gap:7px;padding:7px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg-elevated);color:var(--text-secondary);font-size:0.77rem;font-weight:600;cursor:pointer;transition:var(--transition);font-family:var(--font-body);white-space:nowrap">
+        🏆 Winners Only
+      </button>
     </div>
     <div class="table-wrap">
       <table>
@@ -1353,6 +1288,7 @@ function fetchExecDashboard() {
 // ─────────────────────────────────────────
 function applyLeadershipData(rows) {
   if (!rows || !rows.length) return;
+  _leadershipData = rows; // store for drilldown use
   const pctNum = v => { if (!v && v!==0) return null; const n=parseFloat(String(v).replace('%','')); return isNaN(n)?null:n; };
   const valid = rows.filter(r => { const n=String(r['Name']||'').trim(); return n && n!=='--'; });
 
@@ -1403,6 +1339,7 @@ function applyLeadershipData(rows) {
   buildLB('QA',      null,          'lbQA');
   buildLB('Trainer', 'Call Center', 'lbCCTrainer');
   buildLB('Trainer', 'Digital',     'lbDigTrainer');
+  setTimeout(bindLeaderSpotlightDrills, 100);
 }
 
 function applyIdeaData(rows) {
@@ -1571,35 +1508,20 @@ function animateCounter(id, target, suffix='') {
 // ─────────────────────────────────────────
 function updateKPIs() {
   const d=filteredData;
-  const cc =d.filter(r=>r.channel==='Call Center');
-  const dig=d.filter(r=>r.channel==='Digital');
   const qual=d.filter(r=>r.eligibility==='QUALIFIED'||r.eligibility==='PENDING');
-
-  const ccAvg  = avg(noNull(cc.map(r=>r.empathy)));
-  const digAvg = avg(noNull(dig.map(r=>r.empathy)));
   const wAvg   = avg(noNull(d.map(r=>r.weighted)));
   const qualPct= d.length?(qual.length/d.length*100):0;
 
-  animateCounter('kCC',      ccAvg,  '%');
-  animateCounter('kDig',     digAvg, '%');
-  animateCounter('kWeighted',wAvg,   '%');
+  animateCounter('kWeighted',wAvg,'%');
   document.getElementById('kQual').textContent=qual.length;
   document.getElementById('kQualSub').textContent='of '+d.length+' agents';
   document.getElementById('kTotal').textContent=d.length;
   document.getElementById('kTotalSub').textContent=d.length!==allData.length?'(filtered from '+allData.length+' total)':'total agents';
 
-  // Hero band stats
-  const hCC=document.getElementById('heroCC');
-  const hDig=document.getElementById('heroDig');
+  // Hero band
   const hQ=document.getElementById('heroQual');
-  if(hCC)  hCC.textContent=ccAvg.toFixed(1)+'%';
-  if(hDig) hDig.textContent=digAvg.toFixed(1)+'%';
-  if(hQ)   hQ.textContent=qual.length;
+  if(hQ) hQ.textContent=qual.length;
 
-  const kCCBadge=document.getElementById('kCCBadge');
-  if(kCCBadge) {kCCBadge.textContent=cc.length+' agents'; kCCBadge.className='kpi-badge badge-slate';}
-  const kDigBadge=document.getElementById('kDigBadge');
-  if(kDigBadge){kDigBadge.textContent=dig.length+' agents'; kDigBadge.className='kpi-badge badge-amber';}
   const kQualBadge=document.getElementById('kQualBadge');
   if(kQualBadge){kQualBadge.textContent=qualPct.toFixed(0)+'% eligible'; kQualBadge.className='kpi-badge badge-green';}
   const kWBadge=document.getElementById('kWeightedBadge');
@@ -1641,112 +1563,9 @@ function updateTopPerformers() {
 const gridColor = 'rgba(42,31,26,0.08)';
 const tickColor = '#9c8880';
 
-function initCharts() {
-  Chart.register(ChartDataLabels);
+function initCharts() { /* Performance Analytics charts removed */ }
 
-  charts.lobEmpathy = new Chart(document.getElementById('cLOBEmpathy'), {
-    type:'bar',
-    data:{labels:LOBS.map(l=>LOB_DISPLAY[l]||l),datasets:[{label:'Avg Empathy',data:[],backgroundColor:COLORS_A,borderColor:COLORS,borderWidth:2,borderRadius:8}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},datalabels:{display:false},tooltip:{callbacks:{label:ctx=>' '+ctx.raw?.toFixed(1)+'%'}}},
-      scales:{x:{grid:{color:gridColor},ticks:{color:tickColor}},y:{min:0,max:100,grid:{color:gridColor},ticks:{callback:v=>v+'%',color:tickColor}}}}
-  });
-
-  charts.eligibility = new Chart(document.getElementById('cEligibility'), {
-    type:'bar',
-    data:{labels:LOBS.map(l=>LOB_DISPLAY[l]||l),datasets:[
-      {label:'Qualified',data:[],backgroundColor:'rgba(107,140,122,0.45)',borderColor:'#6b8c7a',borderWidth:2,borderRadius:6},
-      {label:'Not Eligible',data:[],backgroundColor:'rgba(196,97,74,0.45)',borderColor:'#c4614a',borderWidth:2,borderRadius:6}
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:tickColor}},datalabels:{display:false}},
-      scales:{x:{stacked:true,grid:{color:gridColor},ticks:{color:tickColor}},y:{stacked:true,grid:{color:gridColor},ticks:{color:tickColor}}}}
-  });
-
-  charts.scoreDist = new Chart(document.getElementById('cScoreDist'), {
-    type:'bar',
-    data:{labels:['<60','60–70','70–80','80–90','90–100'],
-      datasets:[{label:'Agents',data:[],
-        backgroundColor:['rgba(196,97,74,0.4)','rgba(212,135,58,0.4)','rgba(90,122,140,0.4)','rgba(107,140,122,0.4)','rgba(61,107,90,0.4)'],
-        borderColor:['#c4614a','#d4873a','#5a7a8c','#6b8c7a','#3d6b5a'],
-        borderWidth:2,borderRadius:10}]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},datalabels:{display:false}},
-      scales:{x:{grid:{color:gridColor},ticks:{color:tickColor}},y:{grid:{color:gridColor},ticks:{color:tickColor}}}}
-  });
-
-  charts.site = new Chart(document.getElementById('cSite'), {
-    type:'doughnut',
-    data:{labels:['CTG','DHK'],datasets:[{data:[],
-      backgroundColor:['rgba(184,80,112,0.35)','rgba(90,122,140,0.35)'],
-      borderColor:['#b85070','#5a7a8c'],borderWidth:2,hoverOffset:8}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
-      plugins:{legend:{position:'bottom',labels:{color:tickColor,padding:16}},datalabels:{display:false}}}
-  });
-
-  charts.attendance = new Chart(document.getElementById('cAttendance'), {
-    type:'doughnut',
-    data:{labels:['1–5 days','6–10','11–15','16–20','21+ days'],datasets:[{data:[],
-      backgroundColor:['rgba(196,97,74,0.35)','rgba(212,135,58,0.35)','rgba(90,122,140,0.35)','rgba(107,140,122,0.35)','rgba(61,107,90,0.35)'],
-      borderColor:['#c4614a','#d4873a','#5a7a8c','#6b8c7a','#3d6b5a'],borderWidth:2,hoverOffset:8}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'55%',
-      plugins:{legend:{position:'bottom',labels:{color:tickColor,padding:10}},datalabels:{display:false}}}
-  });
-
-  charts.radar = new Chart(document.getElementById('cRadar'), {
-    type:'radar',
-    data:{labels:['Acknowledgement','Closing / Comm.','Proper Listening','Time & Hold Mgmt'],datasets:[{
-      label:'Floor Avg',data:[],
-      backgroundColor:'rgba(196,97,74,0.12)',borderColor:'#c4614a',
-      pointBackgroundColor:'#c4614a',pointBorderColor:'#fff',borderWidth:2.5,pointRadius:5}]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},datalabels:{display:false}},
-      scales:{r:{min:0,max:100,grid:{color:'rgba(42,31,26,0.1)'},angleLines:{color:'rgba(42,31,26,0.1)'},
-        ticks:{color:tickColor,backdropColor:'transparent',stepSize:25,callback:v=>v+'%'},
-        pointLabels:{color:'#6b5c53',font:{size:11,family:'DM Sans'}}}}}
-  });
-
-  charts.csat = new Chart(document.getElementById('cCSAT'), {
-    type:'line',
-    data:{labels:['Mass','Premium','Retail'],datasets:[{
-      label:'Avg CSAT%',data:[],
-      borderColor:'#c4614a',backgroundColor:'rgba(196,97,74,0.08)',fill:true,
-      tension:0.4,pointBackgroundColor:'#c4614a',pointBorderColor:'#fff',pointRadius:6,borderWidth:2.5}]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},datalabels:{display:false}},
-      scales:{x:{grid:{color:gridColor},ticks:{color:tickColor}},y:{min:80,max:100,grid:{color:gridColor},ticks:{callback:v=>v+'%',color:tickColor}}}}
-  });
-}
-
-function updateCharts() {
-  const d=filteredData;
-  if(!Object.keys(charts).length) return;
-
-  charts.lobEmpathy.data.datasets[0].data=LOBS.map(l=>{const a=noNull(d.filter(r=>r.lob===l).map(r=>r.empathy));return a.length?avg(a):null;});
-  charts.lobEmpathy.update('active');
-
-  charts.eligibility.data.datasets[0].data=LOBS.map(l=>d.filter(r=>r.lob===l&&(r.eligibility==='QUALIFIED'||r.eligibility==='PENDING')).length);
-  charts.eligibility.data.datasets[1].data=LOBS.map(l=>d.filter(r=>r.lob===l&&r.eligibility==='NOT ELIGIBLE').length);
-  charts.eligibility.update('active');
-
-  const bands=[0,0,0,0,0];
-  d.forEach(r=>{const w=r.weighted;if(!w)return;if(w<60)bands[0]++;else if(w<70)bands[1]++;else if(w<80)bands[2]++;else if(w<90)bands[3]++;else bands[4]++;});
-  charts.scoreDist.data.datasets[0].data=bands;
-  charts.scoreDist.update('active');
-
-  charts.site.data.datasets[0].data=[avg(noNull(d.filter(r=>r.site==='CTG').map(r=>r.empathy)))||0,avg(noNull(d.filter(r=>r.site==='DHK').map(r=>r.empathy)))||0];
-  charts.site.update('active');
-
-  const att=[0,0,0,0,0];
-  d.forEach(r=>{const a=r.attendance;if(a<=5)att[0]++;else if(a<=10)att[1]++;else if(a<=15)att[2]++;else if(a<=20)att[3]++;else att[4]++;});
-  charts.attendance.data.datasets[0].data=att;
-  charts.attendance.update('active');
-
-  charts.radar.data.datasets[0].data=['ack','closing','listening','time'].map(k=>{const a=noNull(d.map(r=>r[k]));return a.length?avg(a):0;});
-  charts.radar.update('active');
-
-  charts.csat.data.datasets[0].data=['Mass','Premium','Retail'].map(l=>{const a=noNull(d.filter(r=>r.lob===l).map(r=>r.csat));return a.length?avg(a):null;});
-  charts.csat.update('active');
-}
+function updateCharts() { /* charts removed */ }
 
 function toggleChartType(chartKey, type, btn) {
   btn.parentElement.querySelectorAll('.toggle-btn').forEach(b=>b.classList.remove('active'));
@@ -2241,8 +2060,373 @@ function drillSlot(label, rawVal, total, color) {
   `);
 }
 
+
+// ─────────────────────────────────────────
+// LOB TAB SELECTOR (Agent Performance Table)
+// ─────────────────────────────────────────
+let tableLOBFilter = 'all';
+let tableWinnersOnly = false;
+
+function toggleWinnersFilter() {
+  tableWinnersOnly = !tableWinnersOnly;
+  const btn = document.getElementById('winnersToggleBtn');
+  if (tableWinnersOnly) {
+    btn.style.background = 'rgba(42,138,110,0.15)';
+    btn.style.borderColor = 'var(--sage)';
+    btn.style.color = 'var(--sage)';
+    btn.style.boxShadow = '0 2px 8px rgba(42,138,110,0.2)';
+    showToast('🏆 Winners filter ON', 'success');
+  } else {
+    btn.style.background = 'var(--bg-elevated)';
+    btn.style.borderColor = 'var(--border)';
+    btn.style.color = 'var(--text-secondary)';
+    btn.style.boxShadow = '';
+    showToast('🏆 Winners filter OFF', 'success');
+  }
+  currentPage = 1;
+  renderTable();
+}
+
+function setLOBTab(btn, lob) {
+  document.querySelectorAll('.lob-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  tableLOBFilter = lob;
+  currentPage = 1;
+  renderTable();
+  if (lob !== 'all') showToast(`📊 Showing ${LOB_DISPLAY[lob]||lob} agents`, 'success');
+}
+
+// Override renderTable to respect LOB tab filter + winners toggle on top of global filteredData
+const _origRenderTable = renderTable;
+function renderTable() {
+  const pageSize = parseInt(document.getElementById('pageSize').value);
+  let src = tableLOBFilter === 'all'
+    ? filteredData
+    : filteredData.filter(r => r.lob === tableLOBFilter);
+  if (tableWinnersOnly) {
+    src = src.filter(r => r.eligibility === 'QUALIFIED' || r.eligibility === 'PENDING');
+  }
+
+  _sortedData = [...src].sort((a, b) => {
+    let va = a[sortKey], vb = b[sortKey];
+    if (['name','site','lob','tl','eligibility'].includes(sortKey)) {
+      va = (va||'').toLowerCase(); vb = (vb||'').toLowerCase();
+      return sortDir==='asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+    }
+    va = va||0; vb = vb||0;
+    return sortDir==='asc' ? va-vb : vb-va;
+  });
+
+  const total = _sortedData.length, pages = Math.ceil(total/pageSize)||1;
+  if (currentPage > pages) currentPage = 1;
+  const start = (currentPage-1)*pageSize, end = Math.min(start+pageSize, total);
+  const pageData = _sortedData.slice(start, end);
+  const tbody = document.getElementById('agentTbody');
+
+  // Rank label based on LOB leaderboard position
+  const rankMap = {};
+  _sortedData.forEach((r, i) => { rankMap[allData.indexOf(r)] = i+1; });
+
+  if (!pageData.length) {
+    tbody.innerHTML = `<tr><td colspan="11" class="empty-state">No agents match your filters${tableLOBFilter!=='all'?' for this LOB':''}${tableWinnersOnly?' among winners':''}.</td></tr>`;
+  } else {
+    tbody.innerHTML = pageData.map((r, i) => {
+      const globalIdx = allData.indexOf(r);
+      const w = r.weighted||0;
+      const barClass = w>=85?'bar-g':w>=70?'bar-o':'bar-r';
+      const eClass = r.empathy>=85?'bar-g':r.empathy>=70?'bar-o':'bar-r';
+      const eligClass = r.eligibility==='QUALIFIED'?'pill-q':r.eligibility==='PENDING'?'':'pill-ne';
+      const eligLabel = r.eligibility==='QUALIFIED'?'✅ Qualified':r.eligibility==='PENDING'?'⏳ Pending':'❌ Not Eligible';
+      const rank = rankMap[globalIdx]||'—';
+      return `<tr onclick="openModal(${globalIdx})">
+        <td style="color:var(--text-muted);font-size:0.78rem">${rank}</td>
+        <td><span class="site-badge ${r.site==='CTG'?'site-ctg':'site-dhk'}">${r.site}</span></td>
+        <td><strong>${r.name}</strong></td>
+        <td><span class="pill pill-lob" onclick="event.stopPropagation();filterByLOB('${r.lob}')">${LOB_DISPLAY[r.lob]||r.lob}</span></td>
+        <td style="font-size:0.76rem;color:var(--text-secondary)">${r.tl}</td>
+        <td>${r.attendance||'—'}</td>
+        <td>${fmtP(r.empathy)}<span class="mini-bar-wrap"><span class="mini-bar ${eClass}" style="width:${r.empathy||0}%"></span></span></td>
+        <td>${fmtP(r.weighted)}<span class="mini-bar-wrap"><span class="mini-bar ${barClass}" style="width:${w}%"></span></span></td>
+        <td>${fmtP(r.csat)}</td>
+        <td>${fmtP(r.ce)}</td>
+        <td><span class="pill ${eligClass}">${eligLabel}</span></td>
+      </tr>`;
+    }).join('');
+  }
+
+  // Table title update
+  const lobLabel = tableLOBFilter==='all' ? 'All LOBs' : (LOB_DISPLAY[tableLOBFilter]||tableLOBFilter);
+  const winnersLabel = tableWinnersOnly ? ' · 🏆 Winners Only' : '';
+  document.getElementById('tableCount').textContent = `(${total} agents · ${lobLabel}${winnersLabel})`;
+
+  document.getElementById('pageInfo').textContent = total ? `Showing ${start+1}–${end} of ${total} agents` : 'No agents';
+  const pageBtns = document.getElementById('pageBtns');
+  let btns = `<button class="page-btn" onclick="changePage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
+  getPageRange(currentPage, pages).forEach(p => {
+    if (p==='…') btns += `<button class="page-btn" disabled>…</button>`;
+    else btns += `<button class="page-btn ${p===currentPage?'active':''}" onclick="changePage(${p})">${p}</button>`;
+  });
+  btns += `<button class="page-btn" onclick="changePage(${currentPage+1})" ${currentPage===pages?'disabled':''}>›</button>`;
+  pageBtns.innerHTML = btns;
+}
+
+// ─────────────────────────────────────────
+// CONFETTI UTILITY
+// ─────────────────────────────────────────
+function launchConfetti() {
+  const canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:99999';
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const COLORS = ['#2e7eb8','#2a8a6e','#c07c1a','#8a4a9c','#c0392b','#6aabdb','#f39c12','#27ae60'];
+  const particles = Array.from({length:120}, () => ({
+    x: Math.random()*canvas.width,
+    y: Math.random()*canvas.height - canvas.height,
+    r: 4+Math.random()*7,
+    d: 2+Math.random()*4,
+    color: COLORS[Math.floor(Math.random()*COLORS.length)],
+    tilt: Math.random()*10-5,
+    tiltAngle: 0,
+    tiltInc: 0.07+Math.random()*0.05,
+    shape: Math.random()>0.5?'rect':'circle'
+  }));
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.fillStyle = p.color;
+      if (p.shape==='circle') { ctx.arc(p.x,p.y,p.r,0,Math.PI*2); }
+      else { ctx.rect(p.x,p.y,p.r*1.5,p.r*0.7); }
+      ctx.fill();
+      p.tiltAngle += p.tiltInc;
+      p.y += (Math.cos(p.tiltAngle)+p.d) * 0.9;
+      p.x += Math.sin(frame/10)*1.5;
+      p.tilt = Math.sin(p.tiltAngle)*12;
+      if (p.y > canvas.height) { p.y = -10; p.x = Math.random()*canvas.width; }
+    });
+    frame++;
+    if (frame < 220) requestAnimationFrame(draw);
+    else { canvas.remove(); }
+  }
+  draw();
+}
+
+// ─────────────────────────────────────────
+// UPDATED drillStarCard — with confetti for qualified top performers
+// ─────────────────────────────────────────
+function drillStarCard(lob) {
+  const d = filteredData.filter(r => r.lob === lob);
+  if (!d.length) { showToast('No data for this LOB', 'error'); return; }
+  const sorted = [...d].sort((a,b) => (b.weighted||0)-(a.weighted||0));
+  const qual = d.filter(r => r.eligibility==='QUALIFIED'||r.eligibility==='PENDING');
+  const LOB_ICONS = {'Mass':'📞','Premium':'💎','2nd Tier':'🎯','Retail':'🏪','158':'🆘','Skitto_121':'📲','Live Chat':'💬','Email':'✉️'};
+  const icon = LOB_ICONS[lob]||'⭐';
+
+  // Launch confetti if there's a qualified top performer
+  if (qual.length > 0) launchConfetti();
+
+  openDrill(`
+    <div class="modal-name">${icon} ${LOB_DISPLAY[lob]||lob} — Top Performers</div>
+    <div class="modal-meta">${d.length} agents · ${qual.length} qualified · Avg empathy ${avg(noNull(d.map(r=>r.empathy))).toFixed(1)}%</div>
+    <div class="drill-stat-row">
+      <div class="drill-stat"><div class="drill-stat-label">Total Agents</div><div class="drill-stat-value">${d.length}</div></div>
+      <div class="drill-stat"><div class="drill-stat-label">Qualified</div><div class="drill-stat-value" style="color:var(--sage)">${qual.length}</div></div>
+      <div class="drill-stat"><div class="drill-stat-label">Avg Weighted</div><div class="drill-stat-value">${avg(noNull(d.map(r=>r.weighted))).toFixed(1)}%</div></div>
+    </div>
+    <div class="drill-section-title">🏆 All Agents — Ranked by Weighted Score</div>
+    <table class="drill-table">
+      <thead><tr><th>#</th><th>Name</th><th>Site</th><th>Empathy</th><th>Weighted</th><th>CE%</th><th>Status</th></tr></thead>
+      <tbody>${sorted.map((r,i)=>`<tr style="cursor:pointer${i===0?';background:rgba(42,138,110,0.06)':''}" onclick="closeDrill();setTimeout(()=>openModal(${allData.indexOf(r)}),80)">
+        <td>${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</td>
+        <td><strong>${r.name}</strong></td><td>${r.site}</td>
+        <td>${fmtP(r.empathy)}</td><td>${fmtP(r.weighted)}</td><td>${fmtP(r.ce)}</td>
+        <td>${r.eligibility==='QUALIFIED'?'✅':r.eligibility==='PENDING'?'⏳':'❌'}</td>
+      </tr>`).join('')}</tbody>
+    </table>
+    <div class="drill-note">Click any row to view full agent profile.</div>
+  `);
+}
+
+// ─────────────────────────────────────────
+// UPDATED Qualified Agents drilldown — agents by name, LOB-wise
+// ─────────────────────────────────────────
+function drillQualified() {
+  const d = filteredData;
+  const qual = d.filter(r => r.eligibility==='QUALIFIED');
+  const pend = d.filter(r => r.eligibility==='PENDING');
+  const ne   = d.filter(r => r.eligibility==='NOT ELIGIBLE');
+
+  // Build per-LOB breakdown with agent names
+  const lobSections = LOBS.map(lob => {
+    const agents = d.filter(r => r.lob===lob);
+    if (!agents.length) return null;
+    const lobQual = agents.filter(r => r.eligibility==='QUALIFIED'||r.eligibility==='PENDING')
+      .sort((a,b) => (b.weighted||0)-(a.weighted||0));
+    return { lob, display: LOB_DISPLAY[lob]||lob, agents, lobQual };
+  }).filter(Boolean);
+
+  const rows = lobSections.map(s => s.lobQual.map((r,i) =>
+    `<tr style="cursor:pointer" onclick="closeDrill();setTimeout(()=>openModal(${allData.indexOf(r)}),80)">
+      <td><span style="font-size:0.68rem;font-weight:700;color:var(--text-muted);letter-spacing:0.5px">${s.display}</span></td>
+      <td>${i===0?'🥇':i===1?'🥈':i===2?'🥉':''} <strong>${r.name}</strong></td>
+      <td>${r.site}</td>
+      <td>${fmtP(r.weighted)}</td>
+      <td>${fmtP(r.empathy)}</td>
+      <td>${r.eligibility==='QUALIFIED'?'<span style="color:var(--sage);font-weight:700">✅ Qualified</span>':'<span style="color:var(--amber);font-weight:700">⏳ Pending</span>'}</td>
+    </tr>`
+  ).join('')).join('');
+
+  openDrill(`
+    <div class="modal-name">✅ Qualified Agents — Drilldown</div>
+    <div class="modal-meta">${d.length} agents in current filter</div>
+    <div class="drill-stat-row">
+      <div class="drill-stat"><div class="drill-stat-label">Qualified</div><div class="drill-stat-value" style="color:var(--sage)">${qual.length}</div></div>
+      <div class="drill-stat"><div class="drill-stat-label">Pending</div><div class="drill-stat-value" style="color:var(--amber)">${pend.length}</div></div>
+      <div class="drill-stat"><div class="drill-stat-label">Not Eligible</div><div class="drill-stat-value" style="color:var(--danger)">${ne.length}</div></div>
+      <div class="drill-stat"><div class="drill-stat-label">Pass Rate</div><div class="drill-stat-value">${d.length?Math.round((qual.length+pend.length)/d.length*100):0}%</div></div>
+    </div>
+    <div class="drill-section-title">Qualified & Pending Agents — by LOB (ranked by weighted score)</div>
+    <table class="drill-table">
+      <thead><tr><th>LOB</th><th>Agent Name</th><th>Site</th><th>Weighted</th><th>Empathy</th><th>Status</th></tr></thead>
+      <tbody>${rows||'<tr><td colspan="6" style="text-align:center;color:var(--text-muted)">No qualified agents in current filter.</td></tr>'}</tbody>
+    </table>
+    <div class="drill-note">Pending = score criteria met, attendance not yet confirmed at 22 days. Click any row to view full profile.</div>
+  `);
+}
+
+// ─────────────────────────────────────────
+// UPDATED Total Agents drilldown — eligible vs not, with scores
+// ─────────────────────────────────────────
+function drillTotal() {
+  const d = filteredData;
+  const qual = d.filter(r => r.eligibility==='QUALIFIED'||r.eligibility==='PENDING')
+    .sort((a,b) => (b.weighted||0)-(a.weighted||0));
+  const ne = d.filter(r => r.eligibility==='NOT ELIGIBLE')
+    .sort((a,b) => (b.weighted||0)-(a.weighted||0));
+
+  const makeRows = (list, statusLabel, statusColor) => list.map(r =>
+    `<tr style="cursor:pointer" onclick="closeDrill();setTimeout(()=>openModal(${allData.indexOf(r)}),80)">
+      <td><strong>${r.name}</strong></td>
+      <td>${r.site}</td>
+      <td><span style="font-size:0.7rem;font-weight:700;color:var(--text-muted)">${LOB_DISPLAY[r.lob]||r.lob}</span></td>
+      <td>${fmtP(r.empathy)}</td>
+      <td>${fmtP(r.weighted)}</td>
+      <td>${fmtP(r.ce)}</td>
+      <td>${r.attendance||'—'}</td>
+      <td><span style="font-weight:700;color:${statusColor}">${statusLabel}</span></td>
+    </tr>`
+  ).join('');
+
+  openDrill(`
+    <div class="modal-name">👥 All Agents — Roster Drilldown</div>
+    <div class="modal-meta">${d.length} agents · ${d.filter(r=>r.site==='DHK').length} DHK · ${d.filter(r=>r.site==='CTG').length} CTG</div>
+    <div class="drill-stat-row">
+      <div class="drill-stat"><div class="drill-stat-label">Total</div><div class="drill-stat-value">${d.length}</div></div>
+      <div class="drill-stat"><div class="drill-stat-label">Eligible</div><div class="drill-stat-value" style="color:var(--sage)">${qual.length}</div></div>
+      <div class="drill-stat"><div class="drill-stat-label">Not Eligible</div><div class="drill-stat-value" style="color:var(--danger)">${ne.length}</div></div>
+      <div class="drill-stat"><div class="drill-stat-label">Avg Weighted</div><div class="drill-stat-value">${avg(noNull(d.map(r=>r.weighted))).toFixed(1)}%</div></div>
+    </div>
+    <div class="drill-section-title">✅ Eligible Agents (${qual.length}) — ranked by weighted score</div>
+    <table class="drill-table">
+      <thead><tr><th>Name</th><th>Site</th><th>LOB</th><th>Empathy</th><th>Weighted</th><th>CE%</th><th>Attend.</th><th>Status</th></tr></thead>
+      <tbody>${makeRows(qual,'✅ Eligible','var(--sage)')}</tbody>
+    </table>
+    <div class="drill-section-title" style="margin-top:20px">❌ Not Eligible Agents (${ne.length}) — ranked by weighted score</div>
+    <table class="drill-table">
+      <thead><tr><th>Name</th><th>Site</th><th>LOB</th><th>Empathy</th><th>Weighted</th><th>CE%</th><th>Attend.</th><th>Status</th></tr></thead>
+      <tbody>${makeRows(ne,'❌ Not Eligible','var(--danger)')}</tbody>
+    </table>
+    <div class="drill-note">Click any row to view the full agent profile. Eligibility is calculated live from score thresholds.</div>
+  `);
+}
+
+// ─────────────────────────────────────────
+// LEADERSHIP LEADERBOARD DRILLDOWNS (TL, QA, CC Trainer, Dig Trainer)
+// ─────────────────────────────────────────
+let _leadershipData = [];
+
+// Store leadership data when fetched so drilldowns can use it
+function _storeAndApplyLeadership(rows) {
+  if (rows && rows.length) _leadershipData = rows;
+}
+
+
+
+function drillLeaderLB(type) {
+  if (!_leadershipData.length) { showToast('Leadership data not yet loaded', 'error'); return; }
+  const pctNum = v => { if (!v && v!==0) return null; const n=parseFloat(String(v).replace('%','')); return isNaN(n)?null:n; };
+  const valid = _leadershipData.filter(r => { const n=String(r['Name']||'').trim(); return n && n!=='--'; });
+
+  let role, channel, title, icon;
+  if (type==='tl')         { role='TL';      channel=null;          title='Top Team Leaders'; icon='👥'; }
+  else if (type==='qa')    { role='QA';      channel=null;          title='Top QAs';          icon='🔍'; }
+  else if (type==='cctrainer')  { role='Trainer'; channel='Call Center'; title='Top CC Trainers';  icon='🎓'; }
+  else if (type==='digtrainer') { role='Trainer'; channel='Digital';     title='Top Digital Trainers'; icon='🎓'; }
+  else return;
+
+  let sub = valid.filter(r => String(r['Role']||'').trim()===role);
+  if (channel) sub = sub.filter(r => String(r['Channel']||'').trim()===channel);
+  const parsed = sub.map(r => ({
+    name:    String(r['Name']||'').trim(),
+    channel: String(r['Channel']||'').trim(),
+    lob:     String(r['LOB']||'').trim(),
+    empathy: pctNum(r['Team Empathy Avg']),
+    weighted:pctNum(r['Final Weighted Score']),
+    teamSize:parseInt(String(r['Team Size']||''))||null
+  })).filter(r => r.name).sort((a,b) => (b.empathy||0)-(a.empathy||0));
+
+  if (!parsed.length) { showToast(`No ${title} data found`, 'error'); return; }
+
+  // Confetti for top 3
+  if (parsed.length >= 1) launchConfetti();
+
+  openDrill(`
+    <div class="modal-name">${icon} ${title} — Full List</div>
+    <div class="modal-meta">${parsed.length} ${role}s in data · Ranked by team empathy avg</div>
+    <div class="drill-stat-row">
+      <div class="drill-stat"><div class="drill-stat-label">Top Avg Empathy</div><div class="drill-stat-value">${parsed[0]?.empathy?.toFixed(1)||'—'}%</div></div>
+      <div class="drill-stat"><div class="drill-stat-label">Floor Avg</div><div class="drill-stat-value">${avg(parsed.filter(r=>r.empathy!=null).map(r=>r.empathy)).toFixed(1)}%</div></div>
+      <div class="drill-stat"><div class="drill-stat-label">Total Listed</div><div class="drill-stat-value">${parsed.length}</div></div>
+    </div>
+    <div class="drill-section-title">Rankings</div>
+    <table class="drill-table">
+      <thead><tr><th>#</th><th>Name</th><th>Channel</th><th>Team Empathy</th><th>Weighted</th></tr></thead>
+      <tbody>${parsed.map((r,i)=>`<tr>
+        <td>${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</td>
+        <td><strong>${r.name}</strong></td>
+        <td>${r.channel||'—'}</td>
+        <td>${r.empathy!=null?r.empathy.toFixed(1)+'%':'—'}</td>
+        <td>${r.weighted!=null?r.weighted.toFixed(1)+'%':'—'}</td>
+      </tr>`).join('')}</tbody>
+    </table>
+    <div class="drill-note">Scores reflect team aggregate performance pulled from the Leadership sheet.</div>
+  `);
+}
+
+// ─────────────────────────────────────────
+// UPDATED drillKPI — replace 'qualified' and 'total' handlers
+// ─────────────────────────────────────────
+const _origDrillKPI = drillKPI;
+function drillKPI(type) {
+  if (type === 'qualified') { drillQualified(); return; }
+  if (type === 'total')     { drillTotal();     return; }
+  _origDrillKPI(type);
+}
+
+// Bind leader-card clicks to the TL drilldown
+function bindLeaderSpotlightDrills() {
+  const grid = document.getElementById('leaderGrid');
+  if (!grid) return;
+  grid.querySelectorAll('.leader-card').forEach(card => {
+    card.style.cursor = 'pointer';
+    card.onclick = () => { launchConfetti(); drillLeaderLB('tl'); };
+  });
+}
+
 window.addEventListener('DOMContentLoaded',async()=>{
-  initCharts();
   await fetchData();
 });
 </script>
